@@ -88,10 +88,13 @@ abstract class moodle1_handlers_factory {
         foreach ($plugins as $name => $dir) {
             $handlerfile  = $dir . '/backup/moodle1/lib.php';
             $handlerclass = "moodle1_{$type}_{$name}_handler";
-            if (!file_exists($handlerfile)) {
+            if (file_exists($handlerfile)) {
+                require_once($handlerfile);
+            } elseif ($type == 'block') {
+                $handlerclass = "moodle1_block_generic_handler";
+            } else {
                 continue;
             }
-            require_once($handlerfile);
 
             if (!class_exists($handlerclass)) {
                 throw new moodle1_convert_exception('missing_handler_class', $handlerclass);
@@ -1989,8 +1992,78 @@ abstract class moodle1_resource_successor_handler extends moodle1_mod_handler {
  */
 abstract class moodle1_block_handler extends moodle1_plugin_handler {
 
+    public function get_paths() {
+        $blockname = strtoupper($this->pluginname);
+        return array(
+            new convert_path('block', "/MOODLE_BACKUP/COURSE/BLOCKS/BLOCK/{$blockname}"),
+        );
+    }
+
+    public function process_block(array $data) {
+        $newdata = array();
+        $instanceid     = $data['id'];
+        $contextid = $this->converter->get_contextid(CONTEXT_BLOCK, $data['id']);
+
+        $newdata['blockname'] = $data['name'];
+        $newdata['parentcontextid'] = $this->converter->get_contextid(CONTEXT_COURSE, 0);
+        $newdata['showinsubcontexts'] = 0;
+        $newdata['pagetypepattern'] = $data['pagetype'].='-*';
+        $newdata['subpagepattern'] = '$@NULL@$';
+        $newdata['defaultregion'] = ($data['position']=='l')?'side-pre':'side-post';
+        $newdata['defaultweight'] = $data['weight'];
+        $newdata['configdata'] = $data['configdata'];
+
+        // block.xml
+        $this->open_xml_writer("course/blocks/{$data['name']}_{$instanceid}/block.xml");
+        $this->xmlwriter->begin_tag('block', array('id' => $instanceid, 'contextid' => $contextid));
+
+        foreach ($newdata as $field => $value) {
+            $this->xmlwriter->full_tag($field, $value);
+        }
+
+        $this->xmlwriter->begin_tag('block_positions');
+        $this->xmlwriter->begin_tag('block_position', array('id' => 1));
+        $this->xmlwriter->full_tag('contextid', $newdata['parentcontextid']);
+        $this->xmlwriter->full_tag('pagetype', $data['pagetype']);
+        $this->xmlwriter->full_tag('subpage', '');
+        $this->xmlwriter->full_tag('visible', $data['visible']);
+        $this->xmlwriter->full_tag('region', $newdata['defaultregion']);
+        $this->xmlwriter->full_tag('weight', $newdata['defaultweight']);
+        $this->xmlwriter->end_tag('block_position');
+        $this->xmlwriter->end_tag('block_positions');
+        $this->xmlwriter->end_tag('block');
+        $this->close_xml_writer();
+
+        // inforef.xml
+        $this->open_xml_writer("course/blocks/{$data['name']}_{$instanceid}/inforef.xml");
+        $this->xmlwriter->begin_tag('inforef');
+        // TODO: inforef contents if needed
+        $this->xmlwriter->end_tag('inforef');
+        $this->close_xml_writer();
+
+        // roles.xml
+        $this->open_xml_writer("course/blocks/{$data['name']}_{$instanceid}/roles.xml");
+        $this->xmlwriter->begin_tag('roles');
+        $this->xmlwriter->begin_tag('role_overrides');
+        // TODO: role overrides if needed
+        $this->xmlwriter->end_tag('role_overrides');
+        $this->xmlwriter->begin_tag('role_assignments');
+        // TODO: role assignments if needed
+        $this->xmlwriter->end_tag('role_assignments');
+        $this->xmlwriter->end_tag('roles');
+        $this->close_xml_writer();
+
+        return $data;
+    }
 }
 
+
+/**
+ * Base class for block generic handler
+ */
+class moodle1_block_generic_handler extends moodle1_block_handler {
+
+}
 
 /**
  * Base class for the activity modules' subplugins
