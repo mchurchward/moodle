@@ -45,7 +45,21 @@ class moodle1_block_participants_handler extends moodle1_block_handler {
      */
     public function get_paths() {
         return array(
-            new convert_path('participants', '/MOODLE_BACKUP/COURSE/BLOCKS/BLOCK/PARTICIPANTS'),
+            new convert_path(
+            	'participants', '/MOODLE_BACKUP/COURSE/BLOCKS/BLOCK/PARTICIPANTS',
+                array(
+                    'renamefields' => array(
+                        'name' => 'blockname'
+                    ),
+                	'newfields' => array(
+                        'version' => '',
+                        'showinsubcontexts' => 0,
+                        'subpagepattern' => '$@NULL@S',
+                        'defaultregion' => 'side-pre',
+                        'defaultweight' => 2
+                    )
+                )
+            ),
         );
     }
 
@@ -54,5 +68,14 @@ class moodle1_block_participants_handler extends moodle1_block_handler {
      * data available
      */
     public function process_participants($data) {
+        $instanceid = $data['id'];
+        $contextid = 0;
+        $parentcontextid = 0;
+
+        // Start writing block.xml.
+        $this->open_xml_writer("blocks/part_{$this->moduleid}/quiz.xml");
+        $this->xmlwriter->begin_tag('activity', array('id' => $instanceid,
+                'moduleid' => $this->moduleid, 'modulename' => 'quiz',
+                'contextid' => $contextid));
     }
 }
