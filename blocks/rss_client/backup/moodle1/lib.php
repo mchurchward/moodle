@@ -14,14 +14,9 @@ defined('MOODLE_INTERNAL') || die();
  * Block conversion handler for rss_client
  */
 class moodle1_block_rss_client_handler extends moodle1_block_handler {
-    public function get_paths() {
-        $paths = parent::get_paths();
-        $paths[] = new convert_path('rss_client_feeds', "/MOODLE_BACKUP/COURSE/BLOCKS/BLOCK/RSS_CLIENT/FEEDS/FEED");
-        return $paths;
-    }
-
-    public function process_rss_client_feeds(array $data) {
-        $instanceid = $data['id'];
+	public function process_block(array $data) {
+		parent::process_block($data);
+		$instanceid = $data['id'];
 		$contextid = $this->converter->get_contextid(CONTEXT_BLOCK, $data['id']);
 
 		// Moodle 1.9 backups do not include sufficient data to restore feeds, so we need an empty shell rss_client.xml
@@ -30,7 +25,6 @@ class moodle1_block_rss_client_handler extends moodle1_block_handler {
         $this->xmlwriter->begin_tag('block', array('id' => $instanceid, 'contextid' => $contextid, 'blockname' => 'rss_client'));
         $this->xmlwriter->begin_tag('rss_client', array('id' => $instanceid));
         $this->xmlwriter->full_tag('feeds', '');
-        $this->xmlwriter->full_tag('feed', '');
         $this->xmlwriter->end_tag('rss_client');
         $this->xmlwriter->end_tag('block');
         $this->close_xml_writer();
