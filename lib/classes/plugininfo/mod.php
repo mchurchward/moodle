@@ -100,11 +100,7 @@ class mod extends base {
      * we may want to re-think it one day.
      */
     public function is_uninstall_allowed() {
-        if ($this->name === 'forum') {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     /**
