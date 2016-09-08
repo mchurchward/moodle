@@ -683,7 +683,16 @@ class block_manager {
         global $DB;
         // Allow invisible blocks because this is used when adding default page blocks, which
         // might include invisible ones if the user makes some default blocks invisible
-        $this->check_known_block_type($blockname, true);
+
+        // Function check_known_block_type returns an exception when the requested block is invalid.
+        // Something needs to handle that exception. For now, trap it here, but it probably makes sense
+        // to allow something up the tree to handle this, maybe by a parameter specification.
+        try {
+            $this->check_known_block_type($blockname, true);
+        } catch (Exception $e) {
+            $errormessage = $e->getMessage();
+            // Need to log this information somewhere. For now, just carry on.
+        }
         $this->check_region_is_known($region);
 
         if (empty($pagetypepattern)) {

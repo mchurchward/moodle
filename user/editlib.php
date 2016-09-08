@@ -247,6 +247,13 @@ function useredit_update_bounces($user, $usernew) {
  */
 function useredit_update_trackforums($user, $usernew) {
     global $CFG;
+
+    // To treat forum as a standard module, this should only be called if it is installed. The module needs
+    // to inject the setting, and not be called unless present.
+    if (!file_exists($CFG->dirroot.'/mod/forum/lib.php')) {
+        return;
+    }
+
     if (!isset($usernew->trackforums)) {
         // Locked field.
         return;
