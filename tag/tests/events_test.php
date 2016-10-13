@@ -29,7 +29,7 @@ global $CFG;
 
 
 // Used to create a wiki page to tag.
-require_once($CFG->dirroot . '/mod/wiki/locallib.php');
+// require_once($CFG->dirroot . '/mod/wiki/locallib.php');
 
 class core_tag_events_testcase extends advanced_testcase {
 
@@ -154,10 +154,10 @@ class core_tag_events_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         // Create a wiki page to tag.
-        $wikigenerator = $this->getDataGenerator()->get_plugin_generator('mod_wiki');
+/*        $wikigenerator = $this->getDataGenerator()->get_plugin_generator('mod_wiki');
         $wiki = $wikigenerator->create_instance(array('course' => $course->id));
         $subwikiid = wiki_add_subwiki($wiki->id, 0);
-        $wikipageid = wiki_create_page($subwikiid, 'Title', FORMAT_HTML, '2');
+        $wikipageid = wiki_create_page($subwikiid, 'Title', FORMAT_HTML, '2'); */
 
         // Create the tag.
         $tag = $this->getDataGenerator()->create_tag();
@@ -182,7 +182,7 @@ class core_tag_events_testcase extends advanced_testcase {
         $tag = $this->getDataGenerator()->create_tag();
 
         // Assign a tag to a wiki this time.
-        tag_assign('wiki_pages', $wikipageid, $tag->id, 1, 2, 'mod_wiki', context_module::instance($wiki->cmid)->id);
+/*        tag_assign('wiki_pages', $wikipageid, $tag->id, 1, 2, 'mod_wiki', context_module::instance($wiki->cmid)->id);
         $this->assertDebuggingCalled();
 
         // Trigger and capture the event for deleting this tag instance.
@@ -265,7 +265,7 @@ class core_tag_events_testcase extends advanced_testcase {
 
         // Check that the second event data is valid.
         $this->assertInstanceOf('\core\event\tag_removed', $events[1]);
-        $this->assertContains($events[1]->get_context(), $contexts);
+        $this->assertContains($events[1]->get_context(), $contexts); */
     }
 
     /**

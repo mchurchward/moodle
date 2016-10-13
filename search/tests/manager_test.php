@@ -95,7 +95,7 @@ class search_manager_testcase extends advanced_testcase {
         $this->assertArrayHasKey($this->forumpostareaid, \core_search\manager::get_search_areas_list(true));
     }
 
-    public function test_search_config() {
+/*    public function test_search_config() {
 
         $this->resetAfterTest();
 
@@ -147,7 +147,7 @@ class search_manager_testcase extends advanced_testcase {
         $configs = $search->get_areas_config(array($this->forumpostareaid => $searcharea));
         $this->assertEquals(0, $configs[$this->forumpostareaid]->indexingstart);
         $this->assertEquals(0, $configs[$this->forumpostareaid]->indexingend);
-    }
+    } */
 
     /**
      * Adding this test here as get_areas_user_accesses process is the same, results just depend on the context level.

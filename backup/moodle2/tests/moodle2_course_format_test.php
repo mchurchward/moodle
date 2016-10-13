@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-require_once($CFG->dirroot . '/course/format/topics/lib.php');
+// require_once($CFG->dirroot . '/course/format/topics/lib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 /**
@@ -212,7 +212,7 @@ class core_backup_moodle2_course_format_testcase extends advanced_testcase {
  *
  * Test course format that has 1 option.
  */
-class format_test_cs_options extends format_topics {
+class format_test_cs_options extends format_base {
     /**
      * Override method format_topics::get_default_section_name to prevent PHPUnit errors related to the nonexistent
      * format_test_cs_options lang file.

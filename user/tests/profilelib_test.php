@@ -38,7 +38,7 @@ class core_user_profilelib_testcase extends advanced_testcase {
      * Tests profile_get_custom_fields function and checks it is consistent
      * with profile_user_record.
      */
-    public function test_get_custom_fields() {
+/*    public function test_get_custom_fields() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/user/profile/lib.php');
 
@@ -83,7 +83,7 @@ class core_user_profilelib_testcase extends advanced_testcase {
 
         // Check that profile_user_record returns all the fields when requested.
         $this->assertObjectHasAttribute('frogname', profile_user_record($user->id, false));
-    }
+    } */
 
     /**
      * Make sure that all profile fields can be initialised without arguments.

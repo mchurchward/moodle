@@ -62,8 +62,13 @@ class url {
     protected static function get($resource, $args) {
         global $CFG;
         if (!isset(static::$resolver)) {
-            $klass = !empty($CFG->core_competency_url_resolver) ? $CFG->core_competency_url_resolver : 'tool_lp\\url_resolver';
-            static::$resolver = new $klass();
+            if (!empty($CFG->core_competency_url_resolver)) {
+                $klass = $CFG->core_competency_url_resolver;
+                static::$resolver = new $klass();
+            } else {
+                debugging("URL for '$resource' not implemented.", DEBUG_DEVELOPER);
+                return new moodle_url('/');
+            }
         }
         if (!method_exists(static::$resolver, $resource)) {
             debugging("URL for '$resource' not implemented.", DEBUG_DEVELOPER);

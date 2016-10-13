@@ -1860,9 +1860,9 @@ class core_accesslib_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         // Add a suspended enrol.
-        $selfinstance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'self'));
+/*        $selfinstance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'self'));
         $selfplugin = enrol_get_plugin('self');
-        $selfplugin->update_status($selfinstance, ENROL_INSTANCE_ENABLED);
+        $selfplugin->update_status($selfinstance, ENROL_INSTANCE_ENABLED); */
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $student->id, 'self', 0, 0, ENROL_USER_SUSPENDED);
 
         // Should be enrolled, but not active - user is suspended.

@@ -52,8 +52,8 @@ class core_competency_course_competency_testcase extends advanced_testcase {
         $u3 = $dg->create_user();
         $u4 = $dg->create_user();
 
-        $flatfileplugin = enrol_get_plugin('flatfile');
-        $flatfileinstanceid = $flatfileplugin->add_instance($c2);
+/*        $flatfileplugin = enrol_get_plugin('flatfile');
+        $flatfileinstanceid = $flatfileplugin->add_instance($c2); */
 
         $framework = $lpg->create_framework();
         $comp1 = $lpg->create_competency(array('competencyframeworkid' => $framework->get_id()));   // In C1, and C2.
@@ -120,11 +120,11 @@ class core_competency_course_competency_testcase extends advanced_testcase {
         $this->assertArrayHasKey($c2->id, $courses);
 
         // Check for the user with plugin enabled, but enrolment instance disabled.
-        $flatfileinstance = $DB->get_record('enrol', array('id' => $flatfileinstanceid));
+/*        $flatfileinstance = $DB->get_record('enrol', array('id' => $flatfileinstanceid));
         $flatfileplugin->update_status($flatfileinstance, ENROL_INSTANCE_DISABLED);
         $courses = course_competency::get_courses_with_competency_and_user($comp1->get_id(), $u4->id);
         $this->assertCount(0, $courses);
-        $flatfileplugin->update_status($flatfileinstance, ENROL_INSTANCE_ENABLED);
+        $flatfileplugin->update_status($flatfileinstance, ENROL_INSTANCE_ENABLED); */
 
         // Check for the user with plugin disabled.
         $enrolplugins = array_flip(explode(',', $CFG->enrol_plugins_enabled));

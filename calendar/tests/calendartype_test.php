@@ -159,7 +159,7 @@ class core_calendar_type_testcase extends advanced_testcase {
      * Test that the user profile field datetime minimum and maximum year settings are saved as the
      * equivalent Gregorian years.
      */
-    public function test_calendar_type_datetime_field_submission() {
+/*    public function test_calendar_type_datetime_field_submission() {
         // We want to reset the test data after this run.
         $this->resetAfterTest();
 
@@ -176,7 +176,7 @@ class core_calendar_type_testcase extends advanced_testcase {
         $date['expectedminyear'] = '1967';
         $date['expectedmaxyear'] = '2010';
         $this->datetime_field_submission_test('test_example', $date);
-    }
+    } */
 
     /**
      * Test all the core functions that use the calendar type system.
