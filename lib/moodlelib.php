@@ -4248,9 +4248,15 @@ function delete_user(stdClass $user) {
     // This might be slow but it is really needed - modules might do some extra cleanup!
     role_unassign_all(array('userid' => $user->id));
 
+    // Notify the competency subsystem.
+    \core_competency\api::hook_user_deleted($user->id);
+
     // Now do a brute force cleanup.
 
-    // Remove user's calendar subscriptions.
+    // Delete all user events and subscription events.
+    $DB->delete_records_select('event', 'userid = :userid AND subscriptionid IS NOT NULL', ['userid' => $user->id]);
+
+    // Now, delete all calendar subscription from the user.
     $DB->delete_records('event_subscriptions', ['userid' => $user->id]);
 
     // Remove from all cohorts.
@@ -9509,7 +9515,7 @@ function get_performance_info() {
                     $mode = ' <span title="request cache">[r]</span>';
                     break;
             }
-            $html .= '<ul class="cache-definition-stats list-unstyled ml-1 mb-1 cache-mode-'.$modeclass.' card d-inline-block">';
+            $html .= '<li class="d-inline-flex"><ul class="cache-definition-stats list-unstyled ml-1 mb-1 cache-mode-'.$modeclass.' card d-inline-block">';
             $html .= '<li class="cache-definition-stats-heading p-t-1 card-header bg-dark bg-inverse font-weight-bold">' .
                 $definition . $mode.'</li>';
             $text .= "$definition {";
@@ -9532,7 +9538,7 @@ function get_performance_info() {
                     $html .= "<li class=\"cache-store-stats $cachestoreclass p-x-1\">&nbsp;</li>";
                 }
             }
-            $html .= '</ul>';
+            $html .= '</ul></li>';
             $text .= '} ';
         }
         $html .= '</ul> ';

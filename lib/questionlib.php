@@ -1420,7 +1420,7 @@ function question_category_options($contexts, $top = false, $currentcat = 0,
     foreach ($contexts as $context) {
         $pcontexts[] = $context->id;
     }
-    $contextslist = join($pcontexts, ', ');
+    $contextslist = join(', ', $pcontexts);
 
     $categories = get_categories_for_contexts($contextslist, 'parent, sortorder, name ASC', $top);
 
@@ -1680,7 +1680,8 @@ class context_to_string_translator{
 /**
  * Check capability on category
  *
- * @param int|stdClass $questionorid object or id. If an object is passed, it should include ->contextid and ->createdby.
+ * @param int|stdClass|question_definition $questionorid object or id.
+ *      If an object is passed, it should include ->contextid and ->createdby.
  * @param string $cap 'add', 'edit', 'view', 'use', 'move' or 'tag'.
  * @param int $notused no longer used.
  * @return bool this user has the capability $cap for this question $question?
@@ -2011,7 +2012,7 @@ class question_edit_contexts {
      */
     public function require_one_cap($caps) {
         if (!$this->have_one_cap($caps)) {
-            $capsstring = join($caps, ', ');
+            $capsstring = join(', ', $caps);
             print_error('nopermissions', '', '', $capsstring);
         }
     }
