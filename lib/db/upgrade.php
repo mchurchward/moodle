@@ -3788,9 +3788,6 @@ function xmldb_main_upgrade($oldversion) {
     // Put any upgrade step following this.
 
     if ($oldversion < 2019111800.04) {
-        // Delete any tool_cohortroles mappings for roles which no longer exist.
-        $DB->delete_records_select('tool_cohortroles', "roleid NOT IN (SELECT id FROM {role})");
-
         // Delete any role assignments for roles which no longer exist.
         $DB->delete_records_select('role_assignments', "roleid NOT IN (SELECT id FROM {role})");
 
@@ -3849,6 +3846,31 @@ function xmldb_main_upgrade($oldversion) {
 
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2019111801.05);
+    }
+
+    if ($oldversion < 2019111802.05) {
+        // Clean up completion criteria records referring to courses that no longer exist.
+        $select = 'criteriatype = :type AND courseinstance NOT IN (SELECT id FROM {course})';
+        $params = ['type' => 8]; // COMPLETION_CRITERIA_TYPE_COURSE.
+
+        $DB->delete_records_select('course_completion_criteria', $select, $params);
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2019111802.05);
+    }
+
+    if ($oldversion < 2019111802.08) {
+        // Upgrade h5p MIME type for existing h5p files.
+        $select = $DB->sql_like('filename', '?', false);
+        $DB->set_field_select(
+            'files',
+            'mimetype',
+            'application/zip.h5p',
+            $select,
+            array('%.h5p')
+        );
+
+        upgrade_main_savepoint(true, 2019111802.08);
     }
 
     return true;
